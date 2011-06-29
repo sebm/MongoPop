@@ -62,11 +62,62 @@ app.get('/', function(req, res){
       the_stack = docs[0];
       status = "Used a prexisting The Stack"
     }
-    console.log(the_stack.items)
+    console.log(the_stack)
     
     res.render('index', {
       title: 'MongoPop',
-      status: status
+      status: status,
+      items: null
+    });
+  });
+});
+
+app.get('/push', function(req, res){
+  
+  Stack.find({name:'The Stack'}, function (err, docs) {
+    var the_stack;
+    var status;
+    if (!docs.length) {      
+      the_stack = new Stack({name: 'The Stack'});
+      the_stack.save();
+    } else {
+      the_stack = docs[0];
+    }
+    var newitem = {
+      date: Date.now(),
+      blob: Math.random()
+    };
+    the_stack.items.push(newitem)
+    the_stack.save();
+        
+    res.render('index', {
+      title: 'MongoPop',
+      status: 'Pushed ' + newitem.blob +' onto the stack.',
+      items: the_stack.items
+    });
+  });
+});
+
+app.get('/pop', function(req, res){
+  
+  Stack.find({name:'The Stack'}, function (err, docs) {
+    var the_stack;
+    var status;
+    if (!docs.length) {      
+      the_stack = new Stack({name: 'The Stack'});
+      the_stack.save();
+      
+      status = "Created The Stack";
+    } else {
+      the_stack = docs[0];
+      status = "Used a prexisting The Stack"
+    }
+    console.log(the_stack)
+    
+    res.render('index', {
+      title: 'MongoPop',
+      status: status,
+      items: null
     });
   });
 });
