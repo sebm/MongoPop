@@ -59,10 +59,10 @@ app.get('/', function(req, res){
       
       status = "Created The Stack";
     } else {
-      console.log(docs)
-      
+      the_stack = docs[0];
       status = "Used a prexisting The Stack"
     }
+    console.log(the_stack.items)
     
     res.render('index', {
       title: 'MongoPop',
