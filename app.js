@@ -19,13 +19,10 @@ var StackSchema = new Schema({
 });
 
 var StackItemSchema = new Schema({
-  date: Date
-  ,blob: Number
+  blob: Number
 });
 
 var Stack = mongoose.model('Stack', StackSchema);
-
-
 
 // Configuration
 
@@ -46,79 +43,70 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+
+function displayStack(stack, status, res) {
+  console.log(stack);
+  
+  res.render('index', {
+    title: 'MongoPop',
+    status: status,
+    items: stack.items
+  });
+}
+
+function popTopItem (stack) {
+  console.log(stack);
+  stack.items[0].remove();
+
+  console.log("\n");
+  
+  stack.save( function (err, stack) {
+    if (err) throw err;
+    console.log("removal persisted to mongodb");
+    console.log(stack);
+    mongoose.disconnect();
+  });
+}
+
+function addNewItem(stack, res) {
+  
+}
 // Routes
 
 app.get('/', function(req, res){
   
-  Stack.find({name:'The Stack'}, function (err, docs) {
-    var the_stack;
-    var status;
-    if (!docs.length) {      
-      the_stack = new Stack({name: 'The Stack'});
-      the_stack.save();
-      
-      status = "Created The Stack";
-    } else {
-      the_stack = docs[0];
-      status = "Used a prexisting The Stack"
-    }
-    console.log(the_stack)
+  Stack.findOne({name:'The Stack'}, function (err, stack) {
+    if (err) throw err;
     
-    res.render('index', {
-      title: 'MongoPop',
-      status: status,
-      items: null
-    });
+    if (!stack) {
+      return Stack.create({name: 'The Stack'}, function (err, stack) {
+        if (err) throw err;
+        displayStack(stack, 'Created new "The Stack"', res);
+      });
+    }
+    
+    return displayStack(stack, 'Used existing "The Stack"', res);
   });
+
 });
 
 app.get('/push', function(req, res){
-  
-  Stack.find({name:'The Stack'}, function (err, docs) {
-    var the_stack;
-    var status;
-    if (!docs.length) {      
-      the_stack = new Stack({name: 'The Stack'});
-      the_stack.save();
-    } else {
-      the_stack = docs[0];
+  Stack.findOne({name:'The Stack'}, function (err, stack) {
+    if (err) throw err;
+    
+    if (stack) {
+      return addRandomItem(stack, res);
     }
-    var newitem = {
-      date: Date.now(),
-      blob: Math.random()
-    };
-    the_stack.items.push(newitem)
-    the_stack.save();
-        
-    res.render('index', {
-      title: 'MongoPop',
-      status: 'Pushed ' + newitem.blob +' onto the stack.',
-      items: the_stack.items
-    });
   });
 });
 
 app.get('/pop', function(req, res){
-  
-  Stack.find({name:'The Stack'}, function (err, docs) {
-    var the_stack;
-    var status;
-    if (!docs.length) {      
-      the_stack = new Stack({name: 'The Stack'});
-      the_stack.save();
-      
-      status = "Created The Stack";
-    } else {
-      the_stack = docs[0];
-      status = "Used a prexisting The Stack"
+  Stack.findOne({name:'The Stack'}, function (err, stack) {
+    if (err) throw err;
+
+    if (!stack) {
+      return popTopItem(stack);
     }
-    console.log(the_stack)
-    
-    res.render('index', {
-      title: 'MongoPop',
-      status: status,
-      items: null
-    });
   });
 });
 
