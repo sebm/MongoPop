@@ -1,6 +1,14 @@
 h1= title
 p= status
 
+nav
+  ul
+    - each name, url in links
+      li
+        a(href=url)= name
+        - if (url==currentPath)
+          <=
+
 ol
 - each item in items 
   li= item.blob

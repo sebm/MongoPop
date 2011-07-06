@@ -45,20 +45,29 @@ app.configure('production', function(){
 
 
 function displayStack(stack, status, res) {
+  var currentPath = res.req.route.path;
+  
+  var links = {
+    "/" : 'View the List',
+    "/push" : "Push",
+    "/pop" : "Pop"
+  };
+  
   res.render('index', {
     title: 'MongoPop',
+    links: links,
     status: status,
-    items: stack.items
+    items: stack.items,
+    currentPath: currentPath
   });
   
   //mongoose.disconnect();
 }
 
-function popTopItem (stack, callback) {
+function popTopItem (stack,callback) {
   var theBlob = stack.items[0].blob;
   
-  console.log(stack.items[0]);
-  stack.items[0].remove();
+  stack.items = stack.items.splice(stack.items.length-1, stack.items.length);
   
   stack.save( function (err, stack) {
     if (err) throw err;
@@ -109,13 +118,13 @@ app.get('/push', function(req, res){
 app.get('/pop', function(req, res){
   Stack.findOne({name:'The Stack'}, function (err, stack) {
     if (err) throw err;
-
-    if (stack) {
-      stack.items[0].remove();
-
-      stack.save( function (err, stack) {
-        displayStack(stack, 'Popped '+ 111 +' off of the stack', res);        
+    
+    if (stack && stack.items.length) {
+      return popTopItem(stack, function(num) {
+        displayStack(stack, 'Popped ' + num + ' off The Stack', res);
       });
+    } else {
+      return displayStack(stack, 'Empty Stack!', res);
     }
   });
 });
