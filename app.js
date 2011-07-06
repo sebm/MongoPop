@@ -9,11 +9,12 @@ var app = module.exports = express.createServer();
 
 var mongoose = require('mongoose');
 
-var connectionString = (process.env.MONGOLAB_URI) ? process.env.MONGOLAB_URI : 
+var connectionString = process.env.MONGOLAB_URI || process.env.MONGO_URI || 
   'mongodb://' + process.env.MONGOPOP_MONGO_USER + ':' + 
   process.env.MONGOPOP_MONGO_PW + '@' + process.env.MONGOPOP_MONGO_URL ;
 
 var db = mongoose.connect(connectionString);
+console.log('Using connection string ' + connectionString);
 
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
