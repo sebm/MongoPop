@@ -105,7 +105,6 @@ function popTopItem (stack,callback) {
 
 function addRandomItem(stack, callback) {
   var randomNumber = Math.random();
-  console.log(stack);
   stack.items.push({ blob: randomNumber });
   stack.save(function(err, stack){
     if (err) throw err;
