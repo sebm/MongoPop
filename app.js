@@ -74,11 +74,11 @@ app.configure('production', function(){
 });
 
 
-function displayStack(stack, status, res) {
-  var currentPath = res.req.route.path;
+function displayStack(stack, status, res, req) {
+  var currentPath = req.route.path;
   
   console.log('About to render for '+ currentPath);
-  
+
   var links = {
     "/" : 'View the List',
     "/push" : "Push",
@@ -124,11 +124,11 @@ app.get('/', function(req, res){
     if (!stack) {
       return Stack.create({name: 'The Stack'}, function (err, stack) {
         if (err) throw err;
-        displayStack(stack, 'Created new "The Stack"', res);
+        displayStack(stack, 'Created new "The Stack"', res, req);
       });
     }
     
-    return displayStack(stack, 'Used existing "The Stack"', res);
+    return displayStack(stack, 'Used existing "The Stack"', res, req);
   });
 
 });
@@ -139,7 +139,7 @@ app.get('/push', function(req, res){
     
     if (stack) {
       return addRandomItem(stack, function(num){
-        displayStack(stack, 'Pushed '+ num +' onto The Stack', res);
+        displayStack(stack, 'Pushed '+ num +' onto The Stack', res, req);
       });
     }
   });
@@ -151,10 +151,10 @@ app.get('/pop', function(req, res){
     
     if (stack && stack.items.length) {
       return popTopItem(stack, function(num) {
-        displayStack(stack, 'Popped ' + num + ' off The Stack', res);
+        displayStack(stack, 'Popped ' + num + ' off The Stack', res, req);
       });
     } else {
-      return displayStack(stack, 'Empty Stack!', res);
+      return displayStack(stack, 'Empty Stack!', res, req);
     }
   });
 });
