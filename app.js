@@ -12,17 +12,17 @@ console.log('an express server has been created');
 var mongoose = require('mongoose');
 console.log('mongoose has been loaded');
 
-
+var dotcloudMongoDB = false;
 if (process.env.DOTCLOUD_MONGO_MONGODB_URL) {
-  var dotcloudMongoDB = process.env.DOTCLOUD_MONGO_MONGODB_URL + '/mongopop'
+  dotcloudMongoDB = process.env.DOTCLOUD_MONGO_MONGODB_URL + '/mongopop'
 }
 var connectionString = process.env.MONGOLAB_URI || process.env.MONGO_URI || 
   dotcloudMongoDB ||
   'mongodb://' + process.env.MONGOPOP_MONGO_USER + ':' + 
   process.env.MONGOPOP_MONGO_PW + '@' + process.env.MONGOPOP_MONGO_URL ;
 
+console.log('About to use the following connection string: ' + connectionString);
 var db = mongoose.connect(connectionString);
-console.log('Using connection string ' + connectionString);
 
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
