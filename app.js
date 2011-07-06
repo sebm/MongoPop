@@ -60,8 +60,6 @@ function displayStack(stack, status, res) {
     items: stack.items,
     currentPath: currentPath
   });
-  
-  //mongoose.disconnect();
 }
 
 function popTopItem (stack,callback) {
