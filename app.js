@@ -1,4 +1,5 @@
 console.log('app.js has just been invoked\n')
+
 /**
  * Module dependencies.
  */
@@ -12,10 +13,25 @@ console.log('an express server has been created');
 var mongoose = require('mongoose');
 console.log('mongoose has been loaded');
 
+
 var dotcloudMongoDB = false;
-if (process.env.DOTCLOUD_MONGO_MONGODB_URL) {
+var fs = require('fs')
+
+try {
+  var environment = JSON.parse(fs.readFileSync('./environment.json', 'utf-8'));
+  
+  if (environment.DOTCLOUD_MONGO_MONGODB_URL) {
+    dotcloudMongoDB = environment.DOTCLOUD_MONGO_MONGODB_URL + '/mongopop'
+  }
+  
+} catch(err) {
+  console.log('Could not read environment file');
+}
+
+if (!dotcloudMongoDB && process.env.DOTCLOUD_MONGO_MONGODB_URL) {
   dotcloudMongoDB = process.env.DOTCLOUD_MONGO_MONGODB_URL + '/mongopop'
 }
+
 var connectionString = process.env.MONGOLAB_URI || process.env.MONGO_URI || 
   dotcloudMongoDB ||
   'mongodb://' + process.env.MONGOPOP_MONGO_USER + ':' + 
