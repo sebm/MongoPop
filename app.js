@@ -93,7 +93,7 @@ function displayStack(stack, status, res) {
 }
 
 function popTopItem (stack,callback) {
-  var theBlob = stack.items[0].blob;
+  var theBlob = stack.items[stack.items.length-1].blob;
   
   stack.items = stack.items.splice(stack.items.length-1, stack.items.length);
   
