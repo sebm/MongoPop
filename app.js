@@ -99,7 +99,6 @@ function addRandomItem(stack, callback) {
 // Routes
 
 app.get('/', function(req, res){
-  console.log(res)
   Stack.findOne({name:'The Stack'}, function (err, stack) {
     if (err) throw err;
     
