@@ -77,6 +77,8 @@ app.configure('production', function(){
 function displayStack(stack, status, res) {
   var currentPath = res.req.route.path;
   
+  console.log('About to render for '+ currentPath);
+  
   var links = {
     "/" : 'View the List',
     "/push" : "Push",
@@ -90,6 +92,7 @@ function displayStack(stack, status, res) {
     items: stack.items,
     currentPath: currentPath
   });
+  console.log('Rendering is DONE.');
 }
 
 function popTopItem (stack,callback) {
