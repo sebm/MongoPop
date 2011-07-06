@@ -1,13 +1,17 @@
-
+console.log('app.js has just been invoked\n')
 /**
  * Module dependencies.
  */
 
 var express = require('express');
+console.log('express has been loaded.');
 
 var app = module.exports = express.createServer();
+console.log('an express server has been created');
 
 var mongoose = require('mongoose');
+console.log('mongoose has been loaded');
+
 
 if (process.env.DOTCLOUD_MONGO_MONGODB_URL) {
   var dotcloudMongoDB = process.env.DOTCLOUD_MONGO_MONGODB_URL + '/mongopop'
