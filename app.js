@@ -45,31 +45,35 @@ app.configure('production', function(){
 
 
 function displayStack(stack, status, res) {
-  console.log(stack);
-  
   res.render('index', {
     title: 'MongoPop',
     status: status,
     items: stack.items
   });
+  
+  //mongoose.disconnect();
 }
 
-function popTopItem (stack) {
-  console.log(stack);
+function popTopItem (stack, callback) {
+  var theBlob = stack.items[0].blob;
+  
+  console.log(stack.items[0]);
   stack.items[0].remove();
-
-  console.log("\n");
   
   stack.save( function (err, stack) {
     if (err) throw err;
-    console.log("removal persisted to mongodb");
-    console.log(stack);
-    mongoose.disconnect();
+    callback(theBlob);
   });
 }
 
-function addNewItem(stack, res) {
-  
+function addRandomItem(stack, callback) {
+  var randomNumber = Math.random();
+  console.log(stack);
+  stack.items.push({ blob: randomNumber });
+  stack.save(function(err, stack){
+    if (err) throw err;
+    callback(randomNumber);
+  });
 }
 // Routes
 
@@ -95,7 +99,9 @@ app.get('/push', function(req, res){
     if (err) throw err;
     
     if (stack) {
-      return addRandomItem(stack, res);
+      return addRandomItem(stack, function(num){
+        displayStack(stack, 'Pushed '+ num +' onto The Stack', res);
+      });
     }
   });
 });
@@ -104,8 +110,12 @@ app.get('/pop', function(req, res){
   Stack.findOne({name:'The Stack'}, function (err, stack) {
     if (err) throw err;
 
-    if (!stack) {
-      return popTopItem(stack);
+    if (stack) {
+      stack.items[0].remove();
+
+      stack.save( function (err, stack) {
+        displayStack(stack, 'Popped '+ 111 +' off of the stack', res);        
+      });
     }
   });
 });
