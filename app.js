@@ -8,10 +8,12 @@ var express = require('express');
 var app = module.exports = express.createServer();
 
 var mongoose = require('mongoose');
-var db = mongoose.connect(
-    'mongodb://' + process.env.MONGOPOP_MONGO_USER + ':' + 
-    process.env.MONGOPOP_MONGO_PW + '@' + process.env.MONGOPOP_MONGO_URL
-);
+
+var connectionString = (process.env.MONGOLAB_URI) ? process.env.MONGOLAB_URI : 
+  'mongodb://' + process.env.MONGOPOP_MONGO_USER + ':' + 
+  process.env.MONGOPOP_MONGO_PW + '@' + process.env.MONGOPOP_MONGO_URL ;
+
+var db = mongoose.connect(connectionString);
 
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
