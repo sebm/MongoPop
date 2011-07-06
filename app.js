@@ -9,8 +9,11 @@ var app = module.exports = express.createServer();
 
 var mongoose = require('mongoose');
 
+if (process.env.DOTCLOUD_MONGO_MONGODB_URL) {
+  var dotcloudMongoDB = process.env.DOTCLOUD_MONGO_MONGODB_URL + '/mongopop'
+}
 var connectionString = process.env.MONGOLAB_URI || process.env.MONGO_URI || 
-  process.env.DOTCLOUD_MONGO_MONGODB_URL ||
+  dotcloudMongoDB ||
   'mongodb://' + process.env.MONGOPOP_MONGO_USER + ':' + 
   process.env.MONGOPOP_MONGO_PW + '@' + process.env.MONGOPOP_MONGO_URL ;
 
