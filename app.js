@@ -18,7 +18,7 @@ var dotcloudMongoDB = false;
 var fs = require('fs')
 
 try {
-  var environment = JSON.parse(fs.readFileSync('./environment.json', 'utf-8'));
+  var environment = JSON.parse(fs.readFileSync('../environment.json', 'utf-8'));
   
   if (environment.DOTCLOUD_MONGO_MONGODB_URL) {
     dotcloudMongoDB = environment.DOTCLOUD_MONGO_MONGODB_URL + '/mongopop'
