@@ -88,7 +88,7 @@ function displayStack(stack, status, res, req) {
   res.render('index', {
     title: 'MongoPop',
     links: links,
-    status: status,
+    statusline: status,
     items: stack.items,
     currentPath: currentPath
   });
